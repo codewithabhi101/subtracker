@@ -44,7 +44,7 @@ export default function Dashboard() {
 
   const fetchSubs = async (token: string) => {
     try {
-      const res = await axios.get('http://localhost:5000/api/subscriptions', {
+      const res = await axios.get('https://subtracker-backend.vercel.app/api/subscriptions', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSubs(res.data.data);
@@ -57,7 +57,7 @@ export default function Dashboard() {
   const addSub = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.post('http://localhost:5000/api/subscriptions', form, {
+      await axios.post('https://subtracker-backend.vercel.app/api/subscriptions', form, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setShowModal(false);
@@ -69,7 +69,7 @@ export default function Dashboard() {
   const deleteSub = async (id: string) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`http://localhost:5000/api/subscriptions/${id}`, {
+      await axios.delete(`https://subtracker-backend.vercel.app/api/subscriptions/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchSubs(token!);

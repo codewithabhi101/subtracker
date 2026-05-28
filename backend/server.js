@@ -14,8 +14,8 @@ const io = new Server(server, {
 connectDB();
 
 app.use(cors({
-  origin: 'http://localhost:3000',
-  credentials: true
+  origin: '*',
+  credentials: false
 }));
 app.use(express.json());
 

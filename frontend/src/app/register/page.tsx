@@ -14,7 +14,7 @@ export default function Register() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('https://subtracker-backend.vercel.app/api/auth/register', {
+      const res = await fetch('https://subtracker-backend123.vercel.app/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form)

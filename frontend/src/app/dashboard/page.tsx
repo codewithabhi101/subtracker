@@ -11,8 +11,8 @@ import {
   Settings, Bell, LogOut, Plus, Trash2
 } from 'lucide-react';
 
+const API = 'https://subtracker-backend123.vercel.app';
 const COLORS = ['#6366f1', '#22d3ee', '#f59e0b', '#10b981', '#f43f5e'];
-
 const monthlyData = [
   { month: 'Jan', amount: 1200 },
   { month: 'Feb', amount: 1900 },
@@ -44,7 +44,7 @@ export default function Dashboard() {
 
   const fetchSubs = async (token: string) => {
     try {
-      const res = await axios.get('https://subtracker-backend.vercel.app/api/subscriptions', {
+      const res = await axios.get(`${API}/api/subscriptions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setSubs(res.data.data);
@@ -57,7 +57,7 @@ export default function Dashboard() {
   const addSub = async () => {
     const token = localStorage.getItem('token');
     try {
-      await axios.post('https://subtracker-backend.vercel.app/api/subscriptions', form, {
+      await axios.post(`${API}/api/subscriptions`, form, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setShowModal(false);
@@ -69,7 +69,7 @@ export default function Dashboard() {
   const deleteSub = async (id: string) => {
     const token = localStorage.getItem('token');
     try {
-      await axios.delete(`https://subtracker-backend.vercel.app/api/subscriptions/${id}`, {
+      await axios.delete(`${API}/api/subscriptions/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchSubs(token!);
@@ -106,15 +106,11 @@ export default function Dashboard() {
 
   return (
     <div className="flex h-screen bg-[#0f1729] text-white overflow-hidden">
-
-      {/* Sidebar */}
       <div className="w-56 bg-[#1a2236] flex flex-col py-6 px-4 gap-2 border-r border-white/5">
         <div className="flex items-center gap-2 px-2 mb-6">
           <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center font-bold text-sm">S</div>
           <span className="font-bold text-lg">SubTracker</span>
         </div>
-
-        {/* Avatar */}
         <div className="flex flex-col items-center mb-6 p-3 bg-[#0f1729] rounded-xl">
           <div className="w-12 h-12 bg-indigo-500 rounded-full flex items-center justify-center text-lg font-bold mb-2">
             {user?.name?.charAt(0) || 'A'}
@@ -122,7 +118,6 @@ export default function Dashboard() {
           <div className="text-sm font-medium">{user?.name || 'Abhi'}</div>
           <div className="text-xs text-gray-400">{user?.email || ''}</div>
         </div>
-
         {[
           { id: 'dashboard', icon: <LayoutDashboard size={16} />, label: 'Dashboard' },
           { id: 'subscriptions', icon: <CreditCard size={16} />, label: 'Subscriptions' },
@@ -132,24 +127,18 @@ export default function Dashboard() {
           <button key={item.id}
             onClick={() => setActivePage(item.id)}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all ${
-              activePage === item.id
-                ? 'bg-indigo-600 text-white'
-                : 'text-gray-400 hover:bg-white/5 hover:text-white'
+              activePage === item.id ? 'bg-indigo-600 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white'
             }`}>
             {item.icon} {item.label}
           </button>
         ))}
-
         <button onClick={logout}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400 hover:bg-red-500/10 mt-auto transition-all">
           <LogOut size={16} /> Logout
         </button>
       </div>
 
-      {/* Main */}
       <div className="flex-1 flex flex-col overflow-hidden">
-
-        {/* Topbar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#1a2236]">
           <div>
             <h1 className="text-lg font-bold">
@@ -171,13 +160,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Content */}
         <div className="flex-1 overflow-y-auto p-6 gap-6 flex flex-col">
-
-          {/* DASHBOARD PAGE */}
           {activePage === 'dashboard' && (
             <>
-              {/* Stat Cards */}
               <div className="grid grid-cols-4 gap-4">
                 {[
                   { label: 'Monthly Spend', value: `₹${Math.round(totalMonthly).toLocaleString('en-IN')}`, color: 'from-indigo-600 to-indigo-400', icon: '💰' },
@@ -193,9 +178,7 @@ export default function Dashboard() {
                 ))}
               </div>
 
-              {/* Charts Row */}
               <div className="grid grid-cols-3 gap-4">
-                {/* Area Chart */}
                 <div className="col-span-2 bg-[#1a2236] rounded-2xl p-4">
                   <div className="text-sm font-medium mb-4 text-gray-300">Monthly Spend Trend</div>
                   <ResponsiveContainer width="100%" height={180}>
@@ -214,8 +197,6 @@ export default function Dashboard() {
                     </AreaChart>
                   </ResponsiveContainer>
                 </div>
-
-                {/* Pie Chart */}
                 <div className="bg-[#1a2236] rounded-2xl p-4">
                   <div className="text-sm font-medium mb-4 text-gray-300">By Category</div>
                   {pieData.length > 0 ? (
@@ -245,7 +226,6 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Recent Subs */}
               <div className="bg-[#1a2236] rounded-2xl p-4">
                 <div className="text-sm font-medium mb-4 text-gray-300">Recent Subscriptions</div>
                 {subs.length === 0 ? (
@@ -283,7 +263,6 @@ export default function Dashboard() {
             </>
           )}
 
-          {/* SUBSCRIPTIONS PAGE */}
           {activePage === 'subscriptions' && (
             <div className="bg-[#1a2236] rounded-2xl p-4">
               <div className="flex justify-between items-center mb-4">
@@ -325,7 +304,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* ANALYTICS PAGE */}
           {activePage === 'analytics' && (
             <div className="flex flex-col gap-4">
               <div className="bg-[#1a2236] rounded-2xl p-4">
@@ -362,7 +340,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* SETTINGS PAGE */}
           {activePage === 'settings' && (
             <div className="bg-[#1a2236] rounded-2xl p-6">
               <div className="text-sm font-medium mb-6 text-gray-300">Account Settings</div>
@@ -381,11 +358,9 @@ export default function Dashboard() {
               </div>
             </div>
           )}
-
         </div>
       </div>
 
-      {/* Add Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-[#1a2236] rounded-2xl p-6 w-full max-w-md border border-white/10">

@@ -1,4 +1,3 @@
-```tsx
 "use client";
 
 import { useState } from "react";
@@ -21,12 +20,13 @@ export default function RegisterPage() {
     <div
       style={{
         minHeight: "100vh",
+        overflowY: "auto",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
         padding: "20px",
         background:
-          "radial-gradient(circle at top, rgba(124,58,237,0.25), #0b1020 70%)",
+          "radial-gradient(circle at top, rgba(124,58,237,0.25), #050816 70%)",
         fontFamily: "Inter, sans-serif",
       }}
     >
@@ -34,10 +34,12 @@ export default function RegisterPage() {
         style={{
           width: "100%",
           maxWidth: "430px",
-          background: "rgba(15,17,32,0.92)",
+          maxHeight: "95vh",
+          overflowY: "auto",
+          background: "rgba(10,12,30,0.95)",
           border: "1px solid rgba(255,255,255,0.08)",
           borderRadius: "24px",
-          padding: "40px 32px",
+          padding: "28px 24px",
           backdropFilter: "blur(24px)",
           boxShadow: "0 20px 60px rgba(0,0,0,0.45)",
           color: "white",
@@ -46,15 +48,15 @@ export default function RegisterPage() {
         {/* LOGO */}
         <div
           style={{
-            width: "58px",
-            height: "58px",
-            borderRadius: "16px",
+            width: "62px",
+            height: "62px",
+            borderRadius: "18px",
             background: "linear-gradient(135deg,#7c3aed,#8b5cf6)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            margin: "0 auto 18px",
-            fontSize: "22px",
+            margin: "0 auto 22px",
+            fontSize: "24px",
             fontWeight: "bold",
           }}
         >
@@ -65,9 +67,10 @@ export default function RegisterPage() {
         <h1
           style={{
             textAlign: "center",
-            fontSize: "28px",
+            fontSize: "42px",
             fontWeight: 700,
-            marginBottom: "10px",
+            marginBottom: "12px",
+            lineHeight: 1.1,
           }}
         >
           Create account
@@ -76,30 +79,31 @@ export default function RegisterPage() {
         <p
           style={{
             textAlign: "center",
-            color: "#94a3b8",
-            marginBottom: "28px",
-            fontSize: "14px",
+            color: "#8b90a7",
+            marginBottom: "30px",
+            fontSize: "17px",
           }}
         >
-          Start tracking for free — no credit card
+          Start tracking for free
         </p>
 
         {/* GOOGLE BUTTON */}
         <button
           style={{
             width: "100%",
-            padding: "14px",
-            borderRadius: "14px",
-            background: "white",
-            color: "#111",
-            border: "none",
+            padding: "18px",
+            borderRadius: "16px",
+            background: "#1b1d36",
+            color: "white",
+            border: "1px solid rgba(255,255,255,0.08)",
             cursor: "pointer",
             fontWeight: 600,
+            fontSize: "16px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "10px",
-            marginBottom: "22px",
+            gap: "12px",
+            marginBottom: "26px",
           }}
         >
           <GoogleIcon />
@@ -112,7 +116,7 @@ export default function RegisterPage() {
             display: "flex",
             alignItems: "center",
             gap: "12px",
-            marginBottom: "22px",
+            marginBottom: "28px",
           }}
         >
           <div
@@ -125,9 +129,10 @@ export default function RegisterPage() {
 
           <span
             style={{
-              color: "#94a3b8",
-              fontSize: "11px",
+              color: "#72778f",
+              fontSize: "12px",
               letterSpacing: "1px",
+              whiteSpace: "nowrap",
             }}
           >
             OR CONTINUE WITH EMAIL
@@ -143,12 +148,12 @@ export default function RegisterPage() {
         </div>
 
         {/* FULL NAME */}
-        <div style={{ marginBottom: "18px" }}>
+        <div style={{ marginBottom: "22px" }}>
           <label
             style={{
               display: "block",
-              marginBottom: "8px",
-              fontSize: "13px",
+              marginBottom: "10px",
+              fontSize: "15px",
               fontWeight: 600,
             }}
           >
@@ -165,12 +170,12 @@ export default function RegisterPage() {
         </div>
 
         {/* EMAIL */}
-        <div style={{ marginBottom: "18px" }}>
+        <div style={{ marginBottom: "22px" }}>
           <label
             style={{
               display: "block",
-              marginBottom: "8px",
-              fontSize: "13px",
+              marginBottom: "10px",
+              fontSize: "15px",
               fontWeight: 600,
             }}
           >
@@ -187,12 +192,12 @@ export default function RegisterPage() {
         </div>
 
         {/* PASSWORD */}
-        <div style={{ marginBottom: "22px" }}>
+        <div style={{ marginBottom: "26px" }}>
           <label
             style={{
               display: "block",
-              marginBottom: "8px",
-              fontSize: "13px",
+              marginBottom: "10px",
+              fontSize: "15px",
               fontWeight: 600,
             }}
           >
@@ -208,31 +213,31 @@ export default function RegisterPage() {
           />
         </div>
 
-        {/* SUBMIT */}
+        {/* CREATE BUTTON */}
         <button
           onClick={handleSubmit}
           style={{
             width: "100%",
-            padding: "15px",
-            borderRadius: "14px",
+            padding: "18px",
+            borderRadius: "16px",
             border: "none",
             background: "linear-gradient(135deg,#7c3aed,#8b5cf6)",
             color: "white",
             cursor: "pointer",
             fontWeight: 700,
-            fontSize: "15px",
+            fontSize: "18px",
+            marginBottom: "24px",
           }}
         >
           Create Account →
         </button>
 
-        {/* FOOTER */}
+        {/* SIGN IN */}
         <p
           style={{
-            marginTop: "20px",
             textAlign: "center",
-            color: "#94a3b8",
-            fontSize: "14px",
+            color: "#7f859e",
+            fontSize: "16px",
           }}
         >
           Already have an account?
@@ -240,9 +245,9 @@ export default function RegisterPage() {
             style={{
               color: "#a78bfa",
               cursor: "pointer",
+              marginLeft: "6px",
             }}
           >
-            {" "}
             Sign in
           </span>
         </p>
@@ -254,7 +259,7 @@ export default function RegisterPage() {
 /* GOOGLE ICON */
 function GoogleIcon() {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24">
+    <svg width="22" height="22" viewBox="0 0 24 24">
       <path
         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
         fill="#4285F4"
@@ -275,14 +280,14 @@ function GoogleIcon() {
   );
 }
 
-const inputStyle = {
+const inputStyle: React.CSSProperties = {
   width: "100%",
-  padding: "15px",
-  borderRadius: "14px",
+  padding: "18px",
+  borderRadius: "16px",
   border: "1px solid rgba(255,255,255,0.08)",
-  background: "rgba(255,255,255,0.04)",
+  background: "#1b1d36",
   color: "white",
   outline: "none",
-  fontSize: "14px",
-} as React.CSSProperties;
+  fontSize: "16px",
+};
 ```

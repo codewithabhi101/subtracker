@@ -3,6 +3,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+const colors = {
+  lavender: '#E6E0FA',
+  plum: '#A87CA0',
+  violet: '#5C2B6D',
+  aubergine: '#2A0E3C',
+};
+
 export default function Register() {
   const router = useRouter();
   const [form, setForm] = useState({ name: '', email: '', password: '' });
@@ -31,72 +38,84 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f1729] flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center font-bold text-lg text-white">S</div>
-          <span className="text-white text-xl font-bold">SubTracker</span>
+    <div style={{
+      minHeight: '100vh', background: colors.aubergine,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: 'Inter, sans-serif', padding: '20px',
+      position: 'relative', overflow: 'hidden'
+    }}>
+      <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 50% 30%, rgba(92,43,109,0.5) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+
+      <div style={{ width: '100%', maxWidth: 440, position: 'relative' }}>
+        {/* Back */}
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(230,224,250,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 32 }}>
+          ← Back to home
+        </Link>
+
+        {/* Logo */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
+          <div style={{ width: 56, height: 56, background: `linear-gradient(135deg,${colors.violet},${colors.plum})`, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 24, marginBottom: 16, boxShadow: `0 8px 32px rgba(92,43,109,0.5)` }}>S</div>
+          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8 }}>Create your account</h1>
+          <p style={{ color: 'rgba(230,224,250,0.5)', fontSize: 15 }}>Start tracking your subscriptions</p>
         </div>
-        <div className="bg-[#1a2236] rounded-2xl p-8 border border-white/10">
-          <h1 className="text-2xl font-bold text-white mb-1">Create account 🚀</h1>
-          <p className="text-gray-400 text-sm mb-6">Start tracking your subscriptions today</p>
+
+        {/* Card */}
+        <div style={{ background: 'rgba(92,43,109,0.15)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 20, padding: 32, backdropFilter: 'blur(20px)' }}>
+
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-3 rounded-xl mb-4 text-sm">
+            <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5', padding: '10px 16px', borderRadius: 10, marginBottom: 20, fontSize: 13 }}>
               {error}
             </div>
           )}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">Full Name</label>
+              <label style={{ fontSize: 13, color: 'rgba(230,224,250,0.7)', marginBottom: 6, display: 'block' }}>Full Name</label>
               <input
-                type="text"
-                placeholder="Abhi B C"
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all"
-                value={form.name}
-                onChange={e => setForm({ ...form, name: e.target.value })}
-                required
+                type="text" placeholder="Abhi B C" required
+                value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+                style={{ width: '100%', background: 'rgba(42,14,60,0.6)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 12, padding: '12px 16px', color: '#fff', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">Email</label>
+              <label style={{ fontSize: 13, color: 'rgba(230,224,250,0.7)', marginBottom: 6, display: 'block' }}>Email</label>
               <input
-                type="email"
-                placeholder="abhi@gmail.com"
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all"
-                value={form.email}
-                onChange={e => setForm({ ...form, email: e.target.value })}
-                required
+                type="email" placeholder="you@example.com" required
+                value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+                style={{ width: '100%', background: 'rgba(42,14,60,0.6)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 12, padding: '12px 16px', color: '#fff', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
             <div>
-              <label className="text-xs text-gray-400 mb-1.5 block">Password</label>
+              <label style={{ fontSize: 13, color: 'rgba(230,224,250,0.7)', marginBottom: 6, display: 'block' }}>Password</label>
               <input
-                type="password"
-                placeholder="••••••••"
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-indigo-500 transition-all"
-                value={form.password}
-                onChange={e => setForm({ ...form, password: e.target.value })}
-                required
+                type="password" placeholder="••••••••" required
+                value={form.password} onChange={e => setForm({ ...form, password: e.target.value })}
+                style={{ width: '100%', background: 'rgba(42,14,60,0.6)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 12, padding: '12px 16px', color: '#fff', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
               />
             </div>
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl p-3 text-sm font-medium transition-all mt-2 disabled:opacity-50"
+              type="submit" disabled={loading}
+              style={{ width: '100%', background: `linear-gradient(135deg,${colors.violet},${colors.plum})`, color: '#fff', padding: '14px', borderRadius: 12, fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', marginTop: 8, boxShadow: `0 4px 20px rgba(92,43,109,0.4)`, opacity: loading ? 0.7 : 1 }}
             >
               {loading ? 'Creating account...' : 'Create Account'}
             </button>
           </form>
-          <p className="text-sm text-center text-gray-500 mt-6">
+
+          <div style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: 'rgba(230,224,250,0.5)' }}>
             Already have an account?{' '}
-            <Link href="/login" className="text-indigo-400 hover:text-indigo-300 transition-all">
-              Login here
-            </Link>
-          </p>
+            <Link href="/login" style={{ color: colors.plum, textDecoration: 'none', fontWeight: 600 }}>Sign in</Link>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0' }}>
+            <div style={{ flex: 1, height: 1, background: 'rgba(168,124,160,0.2)' }} />
+            <span style={{ fontSize: 11, color: 'rgba(230,224,250,0.3)', letterSpacing: 1 }}>OR</span>
+            <div style={{ flex: 1, height: 1, background: 'rgba(168,124,160,0.2)' }} />
+          </div>
+
+          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: 'rgba(230,224,250,0.5)', fontSize: 13, textDecoration: 'none' }}>
+            👁 Try Demo Without Signing In
+          </Link>
         </div>
-        <p className="text-center text-gray-600 text-xs mt-4">
-          Built with Next.js + Node.js + MongoDB
-        </p>
       </div>
     </div>
   );

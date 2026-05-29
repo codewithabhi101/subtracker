@@ -1,6 +1,6 @@
-"use client";
 import { useState } from "react";
 
+/* ── Google Icon ── */
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24">
     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -10,198 +10,119 @@ const GoogleIcon = () => (
   </svg>
 );
 
-export default function RegisterPage() {
+/* ── AuthCard wrapper ── */
+function AuthCard({ title, subtitle, children, onBack }) {
+  return (
+    <div style={{
+      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+      background: "radial-gradient(ellipse at 50% 0%, rgba(108,92,231,0.18) 0%, var(--bg) 65%)",
+      padding: "20px"
+    }}>
+      <div className="auth-card" style={{
+        width: "100%", maxWidth: 440,
+        background: "rgba(15,17,32,0.92)", backdropFilter: "blur(24px)",
+        border: "1px solid rgba(255,255,255,0.09)", borderRadius: 20, padding: "40px 36px"
+      }}>
+        <div style={{ textAlign: "center", marginBottom: 28 }}>
+          <div style={{
+            width: 56, height: 56, background: "var(--violet)", borderRadius: 14,
+            margin: "0 auto 16px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22
+          }}>◆</div>
+          <h1 style={{ fontFamily: "Syne", fontSize: 22, fontWeight: 700 }}>{title}</h1>
+          <p style={{ color: "var(--muted)", fontSize: 14, marginTop: 6 }}>{subtitle}</p>
+        </div>
+        {children}
+        <p style={{ textAlign: "center", marginTop: 20, fontSize: 13, color: "var(--muted)", cursor: "pointer" }} onClick={onBack}>← Back to home</p>
+      </div>
+    </div>
+  );
+}
+
+/* ── Divider ── */
+function Divider() {
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "18px 0" }}>
+      <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+      <span style={{ color: "var(--muted)", fontSize: 11, letterSpacing: 1 }}>OR CONTINUE WITH EMAIL</span>
+      <div style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.08)" }} />
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   REGISTER PAGE
+══════════════════════════════════════════════ */
+export default function RegisterPage({ onNavigate }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [pass, setPass] = useState("");
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        :root {
-          --bg: #0b0d18;
-          --card: rgba(15,17,32,0.9);
-          --violet: #6C5CE7;
-          --violet2: #a29bfe;
-          --text: #f0eeff;
-          --muted: rgba(230,224,250,0.45);
-        }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
-        .register-wrapper {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: radial-gradient(ellipse at 50% 0%, rgba(108,92,231,0.15) 0%, var(--bg) 70%);
-          padding: 20px;
-        }
-        .register-card {
-          width: 100%;
-          max-width: 440px;
-          background: var(--card);
-          backdrop-filter: blur(20px);
-          border: 1px solid rgba(255,255,255,0.08);
-          border-radius: 20px;
-          padding: 40px 36px;
-        }
-        @media (max-width: 480px) {
-          .register-card { padding: 32px 20px; border-radius: 16px; }
-        }
-        .logo-wrap { text-align: center; margin-bottom: 28px; }
-        .logo-icon {
-          width: 56px; height: 56px;
-          background: var(--violet);
-          border-radius: 14px;
-          margin: 0 auto 16px;
-          display: flex; align-items: center; justify-content: center;
-          font-size: 24px;
-        }
-        .logo-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; }
-        .logo-sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
-        .divider {
-          display: flex; align-items: center; gap: 12px;
-          margin: 20px 0;
-        }
-        .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
-        .divider-text { color: var(--muted); font-size: 12px; letter-spacing: 1px; white-space: nowrap; }
-        .field { margin-bottom: 14px; }
-        .field label {
-          display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;
-        }
-        input {
-          width: 100%;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 10px;
-          padding: 12px 16px;
-          color: var(--text);
-          font-size: 15px;
-          font-family: 'DM Sans', sans-serif;
-          outline: none;
-          transition: border-color 0.2s;
-        }
-        input:focus { border-color: var(--violet); }
-        input::placeholder { color: var(--muted); }
-        .btn-primary {
-          width: 100%;
-          background: var(--violet);
-          color: #fff;
-          border: none;
-          padding: 14px 24px;
-          border-radius: 10px;
-          font-size: 15px;
-          font-weight: 600;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-          transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-          font-family: 'DM Sans', sans-serif;
-          margin-bottom: 20px;
-        }
-        .btn-primary:hover {
-          background: #7c6cf8;
-          transform: translateY(-1px);
-          box-shadow: 0 8px 24px rgba(108,92,231,0.4);
-        }
-        .btn-ghost {
-          width: 100%;
-          background: rgba(255,255,255,0.06);
-          color: var(--text);
-          border: 1px solid rgba(255,255,255,0.1);
-          padding: 13px 24px;
-          border-radius: 10px;
-          font-size: 15px;
-          font-weight: 500;
-          cursor: pointer;
-          display: flex; align-items: center; justify-content: center; gap: 8px;
-          transition: background 0.2s, border-color 0.2s;
-          font-family: 'DM Sans', sans-serif;
-          margin-bottom: 20px;
-        }
-        .btn-ghost:hover {
-          background: rgba(255,255,255,0.1);
-          border-color: rgba(255,255,255,0.2);
-        }
-        .signin-text {
-          text-align: center; margin-top: 20px;
-          font-size: 14px; color: var(--muted);
-        }
-        .signin-text a { color: var(--violet2); cursor: pointer; text-decoration: none; }
-        .back-link {
-          text-align: center; margin-top: 16px;
-          font-size: 13px; color: var(--muted); cursor: pointer;
-        }
-        .back-link:hover { color: var(--text); }
-        .terms {
-          text-align: center; font-size: 12px; color: var(--muted);
-          margin-top: 16px; line-height: 1.6;
-        }
-        .terms a { color: var(--violet2); text-decoration: none; }
-      `}</style>
+    <AuthCard
+      title="Create account"
+      subtitle="Start tracking for free — no credit card"
+      onBack={() => onNavigate("landing")}
+    >
+      <button
+        className="bg"
+        style={{ width: "100%", justifyContent: "center", padding: "13px" }}
+      >
+        <GoogleIcon /> Continue with Google
+      </button>
 
-      <div className="register-wrapper">
-        <div className="register-card">
-          <div className="logo-wrap">
-            <div className="logo-icon">◆</div>
-            <h1 className="logo-title">Create account</h1>
-            <p className="logo-sub">Start tracking for free</p>
-          </div>
+      <Divider />
 
-          <button className="btn-ghost">
-            <GoogleIcon /> Continue with Google
-          </button>
-
-          <div className="divider">
-            <div className="divider-line" />
-            <span className="divider-text">OR CONTINUE WITH EMAIL</span>
-            <div className="divider-line" />
-          </div>
-
-          <div className="field">
-            <label>Full Name</label>
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Alex Johnson"
-            />
-          </div>
-
-          <div className="field">
-            <label>Email</label>
-            <input
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              type="email"
-            />
-          </div>
-
-          <div className="field" style={{ marginBottom: 24 }}>
-            <label>Password</label>
-            <input
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Min. 8 characters"
-              type="password"
-            />
-          </div>
-
-          <button className="btn-primary">Create Account →</button>
-
-          <p className="signin-text">
-            Already have an account?{" "}
-            <a href="/login">Sign in</a>
-          </p>
-
-          <p className="terms">
-            By signing up you agree to our{" "}
-            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-          </p>
-
-          <p className="back-link">← Back to home</p>
-        </div>
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 7 }}>
+          Full Name
+        </label>
+        <input
+          value={name}
+          onChange={e => setName(e.target.value)}
+          placeholder="Alex Johnson"
+        />
       </div>
-    </>
+
+      <div style={{ marginBottom: 14 }}>
+        <label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 7 }}>
+          Email
+        </label>
+        <input
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          type="email"
+        />
+      </div>
+
+      <div style={{ marginBottom: 22 }}>
+        <label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 7 }}>
+          Password
+        </label>
+        <input
+          value={pass}
+          onChange={e => setPass(e.target.value)}
+          placeholder="Min. 8 characters"
+          type="password"
+        />
+      </div>
+
+      <button
+        className="bp"
+        style={{ width: "100%", justifyContent: "center", padding: "14px" }}
+      >
+        Create Account →
+      </button>
+
+      <p style={{ textAlign: "center", marginTop: 18, fontSize: 14, color: "var(--muted)" }}>
+        Already have an account?{" "}
+        <span
+          style={{ color: "var(--violet2)", cursor: "pointer" }}
+          onClick={() => onNavigate("login")}
+        >
+          Sign in
+        </span>
+      </p>
+    </AuthCard>
   );
 }

@@ -1,122 +1,207 @@
-'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+"use client";
+import { useState } from "react";
 
-const colors = {
-  lavender: '#E6E0FA',
-  plum: '#A87CA0',
-  violet: '#5C2B6D',
-  aubergine: '#2A0E3C',
-};
+const GoogleIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24">
+    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+  </svg>
+);
 
-export default function Register() {
-  const router = useRouter();
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      const res = await fetch('https://subtracker-backend123.vercel.app/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Registration failed');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      router.push('/dashboard');
-    } catch (err: any) {
-      setError(err.message);
-    }
-    setLoading(false);
-  };
+export default function RegisterPage() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
-    <div style={{
-      minHeight: '100vh', background: colors.aubergine,
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      fontFamily: 'Inter, sans-serif', padding: '20px',
-      position: 'relative', overflow: 'hidden'
-    }}>
-      <div style={{ position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 50% 30%, rgba(92,43,109,0.5) 0%, transparent 70%)`, pointerEvents: 'none' }} />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+          --bg: #0b0d18;
+          --card: rgba(15,17,32,0.9);
+          --violet: #6C5CE7;
+          --violet2: #a29bfe;
+          --text: #f0eeff;
+          --muted: rgba(230,224,250,0.45);
+        }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+        .register-wrapper {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: radial-gradient(ellipse at 50% 0%, rgba(108,92,231,0.15) 0%, var(--bg) 70%);
+          padding: 20px;
+        }
+        .register-card {
+          width: 100%;
+          max-width: 440px;
+          background: var(--card);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255,255,255,0.08);
+          border-radius: 20px;
+          padding: 40px 36px;
+        }
+        @media (max-width: 480px) {
+          .register-card { padding: 32px 20px; border-radius: 16px; }
+        }
+        .logo-wrap { text-align: center; margin-bottom: 28px; }
+        .logo-icon {
+          width: 56px; height: 56px;
+          background: var(--violet);
+          border-radius: 14px;
+          margin: 0 auto 16px;
+          display: flex; align-items: center; justify-content: center;
+          font-size: 24px;
+        }
+        .logo-title { font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 700; }
+        .logo-sub { color: var(--muted); font-size: 14px; margin-top: 6px; }
+        .divider {
+          display: flex; align-items: center; gap: 12px;
+          margin: 20px 0;
+        }
+        .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+        .divider-text { color: var(--muted); font-size: 12px; letter-spacing: 1px; white-space: nowrap; }
+        .field { margin-bottom: 14px; }
+        .field label {
+          display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px;
+        }
+        input {
+          width: 100%;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 10px;
+          padding: 12px 16px;
+          color: var(--text);
+          font-size: 15px;
+          font-family: 'DM Sans', sans-serif;
+          outline: none;
+          transition: border-color 0.2s;
+        }
+        input:focus { border-color: var(--violet); }
+        input::placeholder { color: var(--muted); }
+        .btn-primary {
+          width: 100%;
+          background: var(--violet);
+          color: #fff;
+          border: none;
+          padding: 14px 24px;
+          border-radius: 10px;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+          font-family: 'DM Sans', sans-serif;
+          margin-bottom: 20px;
+        }
+        .btn-primary:hover {
+          background: #7c6cf8;
+          transform: translateY(-1px);
+          box-shadow: 0 8px 24px rgba(108,92,231,0.4);
+        }
+        .btn-ghost {
+          width: 100%;
+          background: rgba(255,255,255,0.06);
+          color: var(--text);
+          border: 1px solid rgba(255,255,255,0.1);
+          padding: 13px 24px;
+          border-radius: 10px;
+          font-size: 15px;
+          font-weight: 500;
+          cursor: pointer;
+          display: flex; align-items: center; justify-content: center; gap: 8px;
+          transition: background 0.2s, border-color 0.2s;
+          font-family: 'DM Sans', sans-serif;
+          margin-bottom: 20px;
+        }
+        .btn-ghost:hover {
+          background: rgba(255,255,255,0.1);
+          border-color: rgba(255,255,255,0.2);
+        }
+        .signin-text {
+          text-align: center; margin-top: 20px;
+          font-size: 14px; color: var(--muted);
+        }
+        .signin-text a { color: var(--violet2); cursor: pointer; text-decoration: none; }
+        .back-link {
+          text-align: center; margin-top: 16px;
+          font-size: 13px; color: var(--muted); cursor: pointer;
+        }
+        .back-link:hover { color: var(--text); }
+        .terms {
+          text-align: center; font-size: 12px; color: var(--muted);
+          margin-top: 16px; line-height: 1.6;
+        }
+        .terms a { color: var(--violet2); text-decoration: none; }
+      `}</style>
 
-      <div style={{ width: '100%', maxWidth: 440, position: 'relative' }}>
-        {/* Back */}
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(230,224,250,0.5)', fontSize: 13, textDecoration: 'none', marginBottom: 32 }}>
-          ← Back to home
-        </Link>
-
-        {/* Logo */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
-          <div style={{ width: 56, height: 56, background: `linear-gradient(135deg,${colors.violet},${colors.plum})`, borderRadius: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 24, marginBottom: 16, boxShadow: `0 8px 32px rgba(92,43,109,0.5)` }}>S</div>
-          <h1 style={{ fontSize: 28, fontWeight: 800, color: '#fff', marginBottom: 8 }}>Create your account</h1>
-          <p style={{ color: 'rgba(230,224,250,0.5)', fontSize: 15 }}>Start tracking your subscriptions</p>
-        </div>
-
-        {/* Card */}
-        <div style={{ background: 'rgba(92,43,109,0.15)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 20, padding: 32, backdropFilter: 'blur(20px)' }}>
-
-          {error && (
-            <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: '#fca5a5', padding: '10px 16px', borderRadius: 10, marginBottom: 20, fontSize: 13 }}>
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div>
-              <label style={{ fontSize: 13, color: 'rgba(230,224,250,0.7)', marginBottom: 6, display: 'block' }}>Full Name</label>
-              <input
-                type="text" placeholder="Abhi B C" required
-                value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                style={{ width: '100%', background: 'rgba(42,14,60,0.6)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 12, padding: '12px 16px', color: '#fff', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
-              />
-            </div>
-            <div>
-              <label style={{ fontSize: 13, color: 'rgba(230,224,250,0.7)', marginBottom: 6, display: 'block' }}>Email</label>
-              <input
-                type="email" placeholder="you@example.com" required
-                value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                style={{ width: '100%', background: 'rgba(42,14,60,0.6)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 12, padding: '12px 16px', color: '#fff', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
-              />
-            </div>
-            <div>
-              <label style={{ fontSize: 13, color: 'rgba(230,224,250,0.7)', marginBottom: 6, display: 'block' }}>Password</label>
-              <input
-                type="password" placeholder="••••••••" required
-                value={form.password} onChange={e => setForm({ ...form, password: e.target.value })}
-                style={{ width: '100%', background: 'rgba(42,14,60,0.6)', border: '1px solid rgba(168,124,160,0.2)', borderRadius: 12, padding: '12px 16px', color: '#fff', fontSize: 15, outline: 'none', boxSizing: 'border-box' }}
-              />
-            </div>
-            <button
-              type="submit" disabled={loading}
-              style={{ width: '100%', background: `linear-gradient(135deg,${colors.violet},${colors.plum})`, color: '#fff', padding: '14px', borderRadius: 12, fontSize: 15, fontWeight: 700, border: 'none', cursor: 'pointer', marginTop: 8, boxShadow: `0 4px 20px rgba(92,43,109,0.4)`, opacity: loading ? 0.7 : 1 }}
-            >
-              {loading ? 'Creating account...' : 'Create Account'}
-            </button>
-          </form>
-
-          <div style={{ textAlign: 'center', marginTop: 20, fontSize: 13, color: 'rgba(230,224,250,0.5)' }}>
-            Already have an account?{' '}
-            <Link href="/login" style={{ color: colors.plum, textDecoration: 'none', fontWeight: 600 }}>Sign in</Link>
+      <div className="register-wrapper">
+        <div className="register-card">
+          <div className="logo-wrap">
+            <div className="logo-icon">◆</div>
+            <h1 className="logo-title">Create account</h1>
+            <p className="logo-sub">Start tracking for free</p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '20px 0' }}>
-            <div style={{ flex: 1, height: 1, background: 'rgba(168,124,160,0.2)' }} />
-            <span style={{ fontSize: 11, color: 'rgba(230,224,250,0.3)', letterSpacing: 1 }}>OR</span>
-            <div style={{ flex: 1, height: 1, background: 'rgba(168,124,160,0.2)' }} />
+          <button className="btn-ghost">
+            <GoogleIcon /> Continue with Google
+          </button>
+
+          <div className="divider">
+            <div className="divider-line" />
+            <span className="divider-text">OR CONTINUE WITH EMAIL</span>
+            <div className="divider-line" />
           </div>
 
-          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: 'rgba(230,224,250,0.5)', fontSize: 13, textDecoration: 'none' }}>
-            👁 Try Demo Without Signing In
-          </Link>
+          <div className="field">
+            <label>Full Name</label>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Alex Johnson"
+            />
+          </div>
+
+          <div className="field">
+            <label>Email</label>
+            <input
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              type="email"
+            />
+          </div>
+
+          <div className="field" style={{ marginBottom: 24 }}>
+            <label>Password</label>
+            <input
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Min. 8 characters"
+              type="password"
+            />
+          </div>
+
+          <button className="btn-primary">Create Account →</button>
+
+          <p className="signin-text">
+            Already have an account?{" "}
+            <a href="/login">Sign in</a>
+          </p>
+
+          <p className="terms">
+            By signing up you agree to our{" "}
+            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+          </p>
+
+          <p className="back-link">← Back to home</p>
         </div>
       </div>
-    </div>
+    </>
   );
 }

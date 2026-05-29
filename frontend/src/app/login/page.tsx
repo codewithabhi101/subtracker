@@ -8,6 +8,7 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPass, setShowPass] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,53 +32,182 @@ export default function Login() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#0d1117', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Inter,sans-serif', padding: 20, position: 'relative' }}>
-      <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)', width: 500, height: 500, background: 'radial-gradient(circle,rgba(79,70,229,0.12) 0%,transparent 70%)', pointerEvents: 'none', borderRadius: '50%' }} />
+    <div style={{
+      minHeight: '100vh',
+      background: 'var(--bg)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: 'var(--font-sans)',
+      padding: '20px 16px',
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      {/* Mesh blobs */}
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', overflow: 'hidden' }} aria-hidden>
+        <div style={{ position: 'absolute', width: 600, height: 600, background: '#4f46e5', borderRadius: '50%', filter: 'blur(90px)', opacity: 0.1, top: '-10%', left: '50%', transform: 'translateX(-50%)' }} />
+        <div style={{ position: 'absolute', width: 280, height: 280, background: '#818cf8', borderRadius: '50%', filter: 'blur(60px)', opacity: 0.08, bottom: '10%', left: '5%' }} />
+      </div>
 
-      <div style={{ width: '100%', maxWidth: 420, position: 'relative', animation: 'fadeUp 0.6s ease' }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'rgba(226,232,240,0.4)', fontSize: 13, textDecoration: 'none', marginBottom: 36 }}>
+      <div style={{ width: '100%', maxWidth: 420, position: 'relative', animation: 'fadeUp 0.55s ease forwards' }}>
+        {/* Back link */}
+        <Link href="/" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+          color: 'var(--text3)', fontSize: 13, textDecoration: 'none',
+          marginBottom: 36, fontWeight: 500,
+          transition: 'color 0.2s',
+        }}
+        onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+        onMouseLeave={e => (e.currentTarget.style.color = 'var(--text3)')}
+        >
           ← Back to home
         </Link>
 
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ width: 52, height: 52, background: 'linear-gradient(135deg,#4f46e5,#6366f1)', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 22, margin: '0 auto 18px', boxShadow: '0 8px 30px rgba(79,70,229,0.4)' }}>S</div>
-          <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8, color: '#e2e8f0' }}>Welcome back</h1>
-          <p style={{ color: 'rgba(226,232,240,0.45)', fontSize: 15 }}>Sign in to continue to SubTracker</p>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: 28 }}>
+          <div style={{
+            width: 54, height: 54,
+            background: 'linear-gradient(135deg,#4f46e5,#818cf8)',
+            borderRadius: 14,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 900, fontSize: 24, margin: '0 auto 18px',
+            boxShadow: '0 8px 30px rgba(79,70,229,0.45)',
+            animation: 'pulse-glow 3s ease-in-out infinite',
+          }}>S</div>
+          <h1 style={{ fontSize: 26, fontWeight: 800, marginBottom: 8, letterSpacing: '-0.02em' }}>
+            Welcome back
+          </h1>
+          <p style={{ color: 'var(--text2)', fontSize: 15 }}>
+            Sign in to continue to SubTracker
+          </p>
         </div>
 
-        <div style={{ background: '#161b22', border: '1px solid rgba(99,102,241,0.15)', borderRadius: 18, padding: 28 }}>
+        {/* Form card */}
+        <div style={{
+          background: 'var(--bg2)',
+          border: '1px solid var(--border)',
+          borderRadius: 20,
+          padding: 'clamp(20px,4vw,28px)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+        }}>
+          {/* Error */}
           {error && (
-            <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', color: '#fca5a5', padding: '10px 14px', borderRadius: 8, marginBottom: 18, fontSize: 13 }}>{error}</div>
+            <div style={{
+              background: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.22)',
+              color: '#fca5a5',
+              padding: '11px 14px', borderRadius: 10,
+              marginBottom: 18, fontSize: 13,
+              display: 'flex', alignItems: 'flex-start', gap: 8,
+              animation: 'fadeIn 0.3s ease',
+            }}>
+              <span style={{ flexShrink: 0, marginTop: 1 }}>⚠️</span>
+              {error}
+            </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            {/* Email */}
             <div>
-              <label style={{ fontSize: 13, color: 'rgba(226,232,240,0.6)', marginBottom: 6, display: 'block' }}>Email</label>
-              <input type="email" placeholder="you@example.com" required value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
+              <label style={{ fontSize: 13, color: 'var(--text2)', marginBottom: 7, display: 'block', fontWeight: 600 }}>
+                Email address
+              </label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                required
+                value={form.email}
+                onChange={e => setForm({ ...form, email: e.target.value })}
+                autoComplete="email"
+              />
             </div>
+
+            {/* Password */}
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
-                <label style={{ fontSize: 13, color: 'rgba(226,232,240,0.6)' }}>Password</label>
-                <span style={{ fontSize: 12, color: '#6366f1', cursor: 'pointer' }}>Forgot password?</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 7, alignItems: 'center' }}>
+                <label style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>Password</label>
+                <button
+                  type="button"
+                  style={{
+                    fontSize: 12, color: 'var(--accent2)',
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    fontFamily: 'var(--font-sans)', fontWeight: 600,
+                    padding: 0, width: 'auto',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent3)')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--accent2)')}
+                >
+                  Forgot password?
+                </button>
               </div>
-              <input type="password" placeholder="••••••••" required value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
+              <div style={{ position: 'relative' }}>
+                <input
+                  type={showPass ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  required
+                  value={form.password}
+                  onChange={e => setForm({ ...form, password: e.target.value })}
+                  autoComplete="current-password"
+                  style={{ paddingRight: 44 }}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPass(!showPass)}
+                  style={{
+                    position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: 'var(--text3)', fontSize: 16, padding: 4,
+                    display: 'flex', alignItems: 'center', width: 'auto',
+                  }}
+                  tabIndex={-1}
+                >
+                  {showPass ? '🙈' : '👁'}
+                </button>
+              </div>
             </div>
-            <button type="submit" disabled={loading} className="btn-primary" style={{ marginTop: 6, justifyContent: 'center', padding: '13px', fontSize: 15, opacity: loading ? 0.7 : 1, width: '100%', border: 'none' }}>
-              {loading ? 'Signing in...' : 'Sign In'}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary"
+              style={{ marginTop: 4, padding: '14px', fontSize: 15, opacity: loading ? 0.75 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+            >
+              {loading ? (
+                <><span className="spinner" /> Signing in…</>
+              ) : (
+                'Sign In →'
+              )}
             </button>
           </form>
 
-          <p style={{ textAlign: 'center', fontSize: 13, color: 'rgba(226,232,240,0.4)', marginTop: 18 }}>
-            Don't have an account? <Link href="/register" style={{ color: '#6366f1', textDecoration: 'none', fontWeight: 600 }}>Sign up</Link>
+          {/* Sign up link */}
+          <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--text3)', marginTop: 18 }}>
+            Don't have an account?{' '}
+            <Link href="/register" style={{ color: 'var(--accent2)', textDecoration: 'none', fontWeight: 700 }}>
+              Sign up free
+            </Link>
           </p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0' }}>
-            <div style={{ flex: 1, height: 1, background: 'rgba(99,102,241,0.15)' }} />
-            <span style={{ fontSize: 11, color: 'rgba(226,232,240,0.25)', letterSpacing: 1 }}>OR</span>
-            <div style={{ flex: 1, height: 1, background: 'rgba(99,102,241,0.15)' }} />
-          </div>
+          {/* Divider */}
+          <div className="divider" style={{ margin: '18px 0' }}>or</div>
 
-          <Link href="/dashboard" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, color: 'rgba(226,232,240,0.4)', fontSize: 13, textDecoration: 'none' }}>
+          {/* Demo link */}
+          <Link href="/dashboard" style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
+            color: 'var(--text3)', fontSize: 13, textDecoration: 'none',
+            padding: '10px', borderRadius: 9,
+            border: '1px solid var(--border)',
+            transition: 'all 0.2s',
+            background: 'var(--bg3)',
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--border-hover)';
+            (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text)';
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--border)';
+            (e.currentTarget as HTMLAnchorElement).style.color = 'var(--text3)';
+          }}
+          >
             👁 Try Demo Without Signing In
           </Link>
         </div>

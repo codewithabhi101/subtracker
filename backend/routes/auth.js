@@ -10,9 +10,9 @@ require('../config/passport');
 function oauthRedirect(res, user) {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
   const userPayload = encodeURIComponent(JSON.stringify({
+    id:    user._id,
     name:  user.name,
     email: user.email,
-    _id:   user._id,
   }));
   res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}&user=${userPayload}`);
 }

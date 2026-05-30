@@ -3,6 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const connectDB = require('./config/db');
+const passport = require('./config/passport');
 require('dotenv').config();
 
 const app = express();
@@ -25,6 +26,7 @@ app.use((req, res, next) => {
 
 app.use(cors({ origin: '*' }));
 app.use(express.json());
+app.use(passport.initialize());
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/subscriptions', require('./routes/subscriptions'));

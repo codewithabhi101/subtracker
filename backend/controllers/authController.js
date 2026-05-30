@@ -1,41 +1,49 @@
-const User = require('../models/User');
+const express = require('express');
+const router = express.Router();
+const passport = require('passport');
 const jwt = require('jsonwebtoken');
+const { register, login } = require('../controllers/authController');
+const authMiddleware = require('../middleware/authMiddleware');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 };
 
-exports.register = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    const userExists = await User.findOne({ email });
-    if (userExists)
-      return res.status(400).json({ message: 'User already exists' });
-
-    const user = await User.create({ name, email, password });
-    res.status(201).json({
-      success: true,
-      token: generateToken(user._id),
-      user: { id: user._id, name: user.name, email: user.email }
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+const oauthRedirect = (res, user) => {
+  const token = generateToken(user._id);
+  const userData = encodeURIComponent(JSON.stringify({
+    id: user._id,
+    name: user.name,
+    email: user.email
+  }));
+  res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}&user=${userData}`);
 };
 
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user || !(await user.matchPassword(password)))
-      return res.status(401).json({ message: 'Invalid credentials' });
+// Email auth
+router.post('/register', register);
+router.post('/login', login);
 
-    res.json({
-      success: true,
-      token: generateToken(user._id),
-      user: { id: user._id, name: user.name, email: user.email }
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
+// Get current user
+router.get('/me', authMiddleware, (req, res) => {
+  res.json({ user: req.user });
+});
+
+// Google OAuth
+router.get('/google',
+  passport.authenticate('google', { scope: ['profile', 'email'], session: false })
+);
+router.get('/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=google_failed` }),
+  (req, res) => oauthRedirect(res, req.user)
+);
+
+// GitHub OAuth
+router.get('/github',
+  passport.authenticate('github', { scope: ['user:email'], session: false })
+);
+router.get('/github/callback',
+  passport.authenticate('github', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=github_failed` }),
+  (req, res) => oauthRedirect(res, req.user)
+);
+
+module.exports = router;

@@ -10,10 +10,9 @@ export default function Login() {
   const [form, setForm] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [googleLoading, setGoogleLoading] = useState(false);
+  const [githubLoading, setGithubLoading] = useState(false);
   const [showPass, setShowPass] = useState(false);
 
-  // Handle Google OAuth callback — if redirected back with ?token=...
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const token = params.get('token');
@@ -46,10 +45,9 @@ export default function Login() {
     setLoading(false);
   };
 
-  const handleGoogle = () => {
-    setGoogleLoading(true);
-    // Redirect to backend Google OAuth — it will redirect back to /login?token=...
-    window.location.href = `${API}/api/auth/google`;
+  const handleGithub = () => {
+    setGithubLoading(true);
+    window.location.href = `${API}/api/auth/github`;
   };
 
   return (
@@ -124,29 +122,29 @@ export default function Login() {
             </div>
           )}
 
-          {/* ── Google OAuth button ── */}
+          {/* GitHub OAuth button */}
           <button
             type="button"
-            onClick={handleGoogle}
-            disabled={googleLoading}
+            onClick={handleGithub}
+            disabled={githubLoading}
             style={{
               width: '100%',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
-              background: googleLoading ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.06)',
+              background: githubLoading ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.06)',
               border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: 12,
               padding: '12px 18px',
               color: 'var(--text)',
               fontSize: 15,
               fontWeight: 600,
-              cursor: googleLoading ? 'not-allowed' : 'pointer',
+              cursor: githubLoading ? 'not-allowed' : 'pointer',
               fontFamily: 'var(--font-sans)',
               transition: 'all 0.2s ease',
               marginBottom: 18,
-              opacity: googleLoading ? 0.7 : 1,
+              opacity: githubLoading ? 0.7 : 1,
             }}
             onMouseEnter={e => {
-              if (!googleLoading) {
+              if (!githubLoading) {
                 (e.currentTarget.style.background = 'rgba(255,255,255,0.1)');
                 (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)');
                 (e.currentTarget.style.transform = 'translateY(-1px)');
@@ -158,25 +156,20 @@ export default function Login() {
               (e.currentTarget.style.transform = '');
             }}
           >
-            {googleLoading ? (
+            {githubLoading ? (
               <span className="spinner" />
             ) : (
-              /* Google "G" SVG */
-              <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg">
-                <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
-                <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z" fill="#34A853"/>
-                <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707s.102-1.167.282-1.707V4.961H.957C.347 6.175 0 7.55 0 9s.348 2.825.957 4.039l3.007-2.332z" fill="#FBBC05"/>
-                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.961L3.964 7.293C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
               </svg>
             )}
-            {googleLoading ? 'Redirecting…' : 'Continue with Google'}
+            {githubLoading ? 'Redirecting…' : 'Continue with GitHub'}
           </button>
 
           {/* Divider */}
           <div className="divider" style={{ marginBottom: 18 }}>or continue with email</div>
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Email */}
             <div>
               <label style={{ fontSize: 13, color: 'var(--text2)', marginBottom: 7, display: 'block', fontWeight: 600 }}>
                 Email address
@@ -191,20 +184,17 @@ export default function Login() {
               />
             </div>
 
-            {/* Password */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 7, alignItems: 'center' }}>
                 <label style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>Password</label>
-                <button
-                  type="button"
-                  style={{
-                    fontSize: 12, color: 'var(--accent2)',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    fontFamily: 'var(--font-sans)', fontWeight: 600,
-                    padding: 0, width: 'auto', transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent3)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--accent2)')}
+                <button type="button" style={{
+                  fontSize: 12, color: 'var(--accent2)',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  fontFamily: 'var(--font-sans)', fontWeight: 600,
+                  padding: 0, width: 'auto', transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent3)')}
+                onMouseLeave={e => (e.currentTarget.style.color = 'var(--accent2)')}
                 >
                   Forgot password?
                 </button>
@@ -219,33 +209,23 @@ export default function Login() {
                   autoComplete="current-password"
                   style={{ paddingRight: 44 }}
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  style={{
-                    position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
-                    background: 'none', border: 'none', cursor: 'pointer',
-                    color: 'var(--text3)', fontSize: 16, padding: 4,
-                    display: 'flex', alignItems: 'center', width: 'auto',
-                  }}
-                  tabIndex={-1}
-                >
+                <button type="button" onClick={() => setShowPass(!showPass)} style={{
+                  position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: 'var(--text3)', fontSize: 16, padding: 4,
+                  display: 'flex', alignItems: 'center', width: 'auto',
+                }} tabIndex={-1}>
                   {showPass ? '🙈' : '👁'}
                 </button>
               </div>
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary"
-              style={{ marginTop: 4, padding: '14px', fontSize: 15, opacity: loading ? 0.75 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
-            >
+            <button type="submit" disabled={loading} className="btn-primary"
+              style={{ marginTop: 4, padding: '14px', fontSize: 15, opacity: loading ? 0.75 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}>
               {loading ? <><span className="spinner" /> Signing in…</> : 'Sign In →'}
             </button>
           </form>
 
-          {/* Sign up link */}
           <p style={{ textAlign: 'center', fontSize: 13, color: 'var(--text3)', marginTop: 18 }}>
             Don't have an account?{' '}
             <Link href="/register" style={{ color: 'var(--accent2)', textDecoration: 'none', fontWeight: 700 }}>
@@ -253,10 +233,8 @@ export default function Login() {
             </Link>
           </p>
 
-          {/* Divider */}
           <div className="divider" style={{ margin: '18px 0' }}>or</div>
 
-          {/* Demo link */}
           <Link href="/dashboard" style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7,
             color: 'var(--text3)', fontSize: 13, textDecoration: 'none',

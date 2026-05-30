@@ -4,11 +4,9 @@ const { register, login } = require('../controllers/authController');
 const passport = require('../config/passport');
 const jwt = require('jsonwebtoken');
 
-// Email auth
 router.post('/register', register);
 router.post('/login', login);
 
-// GitHub OAuth
 router.get('/github',
   passport.authenticate('github', { scope: ['user:email'], session: false })
 );

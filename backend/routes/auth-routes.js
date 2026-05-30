@@ -5,9 +5,8 @@ const jwt     = require('jsonwebtoken');
 const passport = require('passport');
 const User    = require('../models/User');
 
-// Load OAuth strategies
-require('./passport-google');   // Google strategy
-require('./passport-github');   // GitHub strategy (your existing file)
+require('../config/passport-google');
+require('../config/passport');
 
 // ── Helper: generate token + redirect to frontend ────────────────────
 function oauthRedirect(res, user) {

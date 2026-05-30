@@ -3,7 +3,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const connectDB = require('./config/db');
-const passport = require('./config/passport');
+const passport = require('./config/.passport-google');
 require('dotenv').config();
 
 const app = express();
@@ -28,7 +28,7 @@ app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(passport.initialize());
 
-app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth', require('./routes/auth-routes'));
 app.use('/api/subscriptions', require('./routes/subscriptions'));
 
 require('./socket/socketHandler')(io);

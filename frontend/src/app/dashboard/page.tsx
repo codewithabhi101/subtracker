@@ -43,7 +43,6 @@ const monthlyData = [
 
 const COLORS = ['#6366f1','#22c55e','#f59e0b','#ef4444','#8b5cf6'];
 
-/* ─── Sub Avatar ────────────────────────────────────────── */
 function SubAvatar({ name, category }: { name: string; category: string }) {
   const color = catColors[category] || '#6366f1';
   return (
@@ -59,7 +58,6 @@ function SubAvatar({ name, category }: { name: string; category: string }) {
   );
 }
 
-/* ─── Component ──────────────────────────────────────────── */
 export default function Dashboard() {
   const router = useRouter();
   const [subs, setSubs]           = useState<any[]>([]);
@@ -85,7 +83,6 @@ export default function Dashboard() {
     fetchSubs(token);
   }, []);
 
-  // Close modal on Escape
   useEffect(() => {
     const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowModal(false); };
     document.addEventListener('keydown', fn);
@@ -133,7 +130,6 @@ export default function Dashboard() {
     } catch (e) { console.error(e); }
   };
 
-  /* ── Derived data ──── */
   const activeSubs    = subs.filter(s => s.status === 'active');
   const totalMonthly  = activeSubs.reduce(
     (sum, s) => sum + (s.billingCycle === 'yearly' ? s.amount / 12 : s.amount), 0
@@ -150,14 +146,12 @@ export default function Dashboard() {
     }))
     .filter(d => d.value > 0);
 
-  /* ── Styles ──── */
   const s = {
     bg: 'var(--bg)', bg2: 'var(--bg2)', bg3: 'var(--bg3)',
     border: 'var(--border)', text: 'var(--text)', text2: 'var(--text2)',
     accent: 'var(--accent)', accent2: 'var(--accent2)', accent3: 'var(--accent3)',
   };
 
-  /* ── Nav items ──── */
   const navItems = [
     { id: 'dashboard',     icon: '⊞',  label: 'Dashboard'    },
     { id: 'budget',        icon: '◉',  label: 'Budget'       },
@@ -191,7 +185,6 @@ export default function Dashboard() {
         position: 'sticky', top: 0, zIndex: 50,
         gap: 8,
       }}>
-        {/* Left: Logo + nav */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 20, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
             <div style={{
@@ -204,8 +197,6 @@ export default function Dashboard() {
             }}>S</div>
             <span style={{ fontWeight: 800, fontSize: 15, letterSpacing: '-0.02em' }}>SubTracker</span>
           </div>
-
-          {/* Desktop tabs */}
           <div className="hide-mobile" style={{ display: 'flex', gap: 2 }}>
             {navItems.map(item => (
               <button
@@ -219,7 +210,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Right: actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           <button
             onClick={() => setShowModal(true)}
@@ -242,7 +232,6 @@ export default function Dashboard() {
             ⭐ Upgrade
           </button>
           <button style={{ background: 'none', border: 'none', color: s.text2, fontSize: 18, cursor: 'pointer', padding: 4 }}>🔔</button>
-          {/* Avatar */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 7, cursor: 'pointer' }}>
             <div style={{
               width: 30, height: 30, flexShrink: 0,
@@ -257,15 +246,19 @@ export default function Dashboard() {
               {user?.name}
             </span>
           </div>
+          {/* ── FIXED LOGOUT BUTTON ── */}
           <button
-            onClick={() => { localStorage.clear(); router.push('/login'); }}
+            onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('user');
+              router.replace('/login');
+            }}
             style={{ background: 'none', border: 'none', color: '#f87171', cursor: 'pointer', fontSize: 12, fontFamily: 'var(--font-sans)', padding: '4px 6px', borderRadius: 6, transition: 'background 0.2s' }}
             onMouseEnter={e => (e.currentTarget.style.background = 'rgba(239,68,68,0.08)')}
             onMouseLeave={e => (e.currentTarget.style.background = 'none')}
           >
             Logout
           </button>
-          {/* Mobile hamburger */}
           <button
             className="show-mobile"
             onClick={() => setMobileSidebar(!mobileSidebar)}
@@ -296,7 +289,6 @@ export default function Dashboard() {
                 padding: '6px 12px', borderRadius: 10,
                 color: activePage === item.id ? s.accent3 : s.text2,
                 fontSize: 11, fontFamily: 'var(--font-sans)', fontWeight: activePage === item.id ? 700 : 500,
-                background2: activePage === item.id ? 'rgba(99,102,241,0.1)' : 'transparent',
               } as any}
             >
               <span style={{ fontSize: 18 }}>{item.icon}</span>
@@ -311,14 +303,11 @@ export default function Dashboard() {
         padding: 'clamp(16px,3vw,28px) clamp(12px,3vw,32px)',
         maxWidth: 1240,
         margin: '0 auto',
-        paddingBottom: 80, // for mobile nav
+        paddingBottom: 80,
       }}>
 
-        {/* ── DASHBOARD PAGE ─── */}
         {activePage === 'dashboard' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, animation: 'fadeIn 0.4s ease' }}>
-
-            {/* Header */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12 }}>
               <div>
                 <h1 style={{ fontSize: 'clamp(20px,3vw,26px)', fontWeight: 800, marginBottom: 4, letterSpacing: '-0.02em' }}>
@@ -333,12 +322,7 @@ export default function Dashboard() {
               </button>
             </div>
 
-            {/* Stat Cards */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-              gap: 12,
-            }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
               {[
                 { label: 'MONTHLY SPEND', val: `₹${Math.round(totalMonthly).toLocaleString('en-IN')}`, sub: 'This month', icon: '💰', color: '#6366f1' },
                 { label: 'YEARLY TOTAL', val: `₹${Math.round(totalMonthly * 12).toLocaleString('en-IN')}`, sub: 'Projected annual', icon: '📅', color: '#10b981' },
@@ -353,8 +337,7 @@ export default function Dashboard() {
                 <div key={i} style={{
                   background: s.bg2, border: `1px solid ${s.border}`,
                   borderRadius: 14, padding: '16px 18px',
-                  transition: 'all 0.25s ease',
-                  cursor: 'default',
+                  transition: 'all 0.25s ease', cursor: 'default',
                   position: 'relative', overflow: 'hidden',
                 }}
                 onMouseEnter={e => {
@@ -373,7 +356,6 @@ export default function Dashboard() {
                   <div style={{ fontSize: 9, color: s.text2, letterSpacing: 1.4, marginBottom: 10, fontWeight: 700 }}>{c.label}</div>
                   <div style={{ fontSize: 'clamp(20px,3vw,26px)', fontWeight: 800, marginBottom: 5, letterSpacing: '-0.02em' }}>{c.val}</div>
                   <div style={{ fontSize: 11, color: s.text2, lineHeight: 1.5 }}>{c.sub}</div>
-                  {/* Colored dot accent */}
                   <div style={{
                     position: 'absolute', top: 14, right: 14,
                     width: 28, height: 28, borderRadius: 8,
@@ -385,9 +367,7 @@ export default function Dashboard() {
               ))}
             </div>
 
-            {/* Main content */}
             {subs.length === 0 ? (
-              /* Empty state */
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div style={{
                   background: s.bg2, border: `1px solid ${s.border}`,
@@ -401,40 +381,19 @@ export default function Dashboard() {
                   <p style={{ color: s.text2, marginBottom: 24, fontSize: 15, maxWidth: 400, margin: '0 auto 24px' }}>
                     Add your first subscription to see spending insights, reminders, and more.
                   </p>
-                  <button
-                    onClick={() => setShowModal(true)}
-                    className="btn-primary"
-                    style={{ padding: '12px 28px', fontSize: 15 }}
-                  >
+                  <button onClick={() => setShowModal(true)} className="btn-primary" style={{ padding: '12px 28px', fontSize: 15 }}>
                     + Add Your First Subscription
                   </button>
                 </div>
-
-                <QuickAdd
-                  services={popularServices}
-                  onPick={(name) => { setForm(f => ({ ...f, name })); setShowModal(true); }}
-                  bg2={s.bg2} border={s.border} text2={s.text2}
-                />
+                <QuickAdd services={popularServices} onPick={(name) => { setForm(f => ({ ...f, name })); setShowModal(true); }} bg2={s.bg2} border={s.border} text2={s.text2} />
               </div>
             ) : (
-              /* Data layout */
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0,1fr) minmax(260px,320px)',
-                gap: 16,
-              }}
-              className="dash-main-grid"
-              >
-                {/* Left col */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(260px,320px)', gap: 16 }} className="dash-main-grid">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-                  {/* Subscriptions list */}
                   <div style={{ background: s.bg2, border: `1px solid ${s.border}`, borderRadius: 14, padding: 20 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
                       <div style={{ fontWeight: 700, fontSize: 14, letterSpacing: '0.04em', color: s.text2 }}>SUBSCRIPTIONS</div>
-                      <button
-                        onClick={() => setActivePage('subscriptions')}
-                        style={{ fontSize: 12, color: s.accent2, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: 'var(--font-sans)' }}
-                      >
+                      <button onClick={() => setActivePage('subscriptions')} style={{ fontSize: 12, color: s.accent2, background: 'none', border: 'none', cursor: 'pointer', fontWeight: 600, fontFamily: 'var(--font-sans)' }}>
                         View all →
                       </button>
                     </div>
@@ -453,25 +412,14 @@ export default function Dashboard() {
                         </div>
                         <button
                           onClick={() => deleteSub(sub._id)}
-                          style={{
-                            background: 'none', border: 'none', cursor: 'pointer',
-                            color: 'rgba(232,237,245,0.18)', fontSize: 14, padding: '6px',
-                            borderRadius: 6, transition: 'all 0.15s', flexShrink: 0,
-                          }}
-                          onMouseEnter={e => {
-                            (e.currentTarget.style.color = '#f87171');
-                            (e.currentTarget.style.background = 'rgba(239,68,68,0.08)');
-                          }}
-                          onMouseLeave={e => {
-                            (e.currentTarget.style.color = 'rgba(232,237,245,0.18)');
-                            (e.currentTarget.style.background = 'none');
-                          }}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(232,237,245,0.18)', fontSize: 14, padding: '6px', borderRadius: 6, transition: 'all 0.15s', flexShrink: 0 }}
+                          onMouseEnter={e => { (e.currentTarget.style.color = '#f87171'); (e.currentTarget.style.background = 'rgba(239,68,68,0.08)'); }}
+                          onMouseLeave={e => { (e.currentTarget.style.color = 'rgba(232,237,245,0.18)'); (e.currentTarget.style.background = 'none'); }}
                         >✕</button>
                       </div>
                     ))}
                   </div>
 
-                  {/* Chart */}
                   <div style={{ background: s.bg2, border: `1px solid ${s.border}`, borderRadius: 14, padding: 20 }}>
                     <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 16, letterSpacing: '0.04em', color: s.text2 }}>SPENDING TREND</div>
                     <ResponsiveContainer width="100%" height={160}>
@@ -485,27 +433,14 @@ export default function Dashboard() {
                         <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.07)" />
                         <XAxis dataKey="month" tick={{ fill: 'rgba(232,237,245,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} />
                         <YAxis tick={{ fill: 'rgba(232,237,245,0.3)', fontSize: 10 }} axisLine={false} tickLine={false} />
-                        <Tooltip
-                          contentStyle={{
-                            background: 'var(--bg2)', border: '1px solid rgba(99,102,241,0.2)',
-                            borderRadius: 10, color: 'var(--text)', fontSize: 12,
-                          }}
-                          formatter={(v: any) => [`₹${v}`, 'Spent']}
-                        />
-                        <Area type="monotone" dataKey="amount" stroke="#4f46e5" fill="url(#grad1)" strokeWidth={2.5}
-                          dot={{ fill: '#6366f1', strokeWidth: 0, r: 3 }}
-                          activeDot={{ r: 5, fill: '#818cf8' }}
-                        />
+                        <Tooltip contentStyle={{ background: 'var(--bg2)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 10, color: 'var(--text)', fontSize: 12 }} formatter={(v: any) => [`₹${v}`, 'Spent']} />
+                        <Area type="monotone" dataKey="amount" stroke="#4f46e5" fill="url(#grad1)" strokeWidth={2.5} dot={{ fill: '#6366f1', strokeWidth: 0, r: 3 }} activeDot={{ r: 5, fill: '#818cf8' }} />
                       </AreaChart>
                     </ResponsiveContainer>
                   </div>
                 </div>
 
-                {/* Right col: category breakdown */}
-                <div style={{
-                  background: s.bg2, border: `1px solid ${s.border}`,
-                  borderRadius: 14, padding: 20, height: 'fit-content',
-                }}>
+                <div style={{ background: s.bg2, border: `1px solid ${s.border}`, borderRadius: 14, padding: 20, height: 'fit-content' }}>
                   <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 16, letterSpacing: '0.04em', color: s.text2 }}>BY CATEGORY</div>
                   {pieData.length > 0 && (
                     <ResponsiveContainer width="100%" height={160}>
@@ -513,18 +448,13 @@ export default function Dashboard() {
                         <Pie data={pieData} cx="50%" cy="50%" innerRadius={46} outerRadius={70} dataKey="value" paddingAngle={3}>
                           {pieData.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} strokeWidth={0} />)}
                         </Pie>
-                        <Tooltip
-                          contentStyle={{ background: 'var(--bg2)', border: 'none', borderRadius: 10, color: 'var(--text)', fontSize: 12 }}
-                          formatter={(v: any) => [`₹${Math.round(v)}/mo`, '']}
-                        />
+                        <Tooltip contentStyle={{ background: 'var(--bg2)', border: 'none', borderRadius: 10, color: 'var(--text)', fontSize: 12 }} formatter={(v: any) => [`₹${Math.round(v)}/mo`, '']} />
                       </PieChart>
                     </ResponsiveContainer>
                   )}
                   <div style={{ marginTop: 8 }}>
                     {['streaming','music','software','gaming','other'].map(cat => {
-                      const total = activeSubs
-                        .filter(s => s.category === cat)
-                        .reduce((sum, s) => sum + (s.billingCycle === 'yearly' ? s.amount / 12 : s.amount), 0);
+                      const total = activeSubs.filter(s => s.category === cat).reduce((sum, s) => sum + (s.billingCycle === 'yearly' ? s.amount / 12 : s.amount), 0);
                       if (total === 0) return null;
                       const pct = Math.round((total / totalMonthly) * 100);
                       return (
@@ -548,31 +478,21 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* Quick add (when subs exist) */}
             {subs.length > 0 && (
-              <QuickAdd
-                services={popularServices}
-                onPick={(name) => { setForm(f => ({ ...f, name })); setShowModal(true); }}
-                bg2={s.bg2} border={s.border} text2={s.text2}
-              />
+              <QuickAdd services={popularServices} onPick={(name) => { setForm(f => ({ ...f, name })); setShowModal(true); }} bg2={s.bg2} border={s.border} text2={s.text2} />
             )}
           </div>
         )}
 
-        {/* ── SUBSCRIPTIONS PAGE ─── */}
         {activePage === 'subscriptions' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, animation: 'fadeIn 0.4s ease' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
               <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>Your Subscriptions</h1>
-              <button onClick={() => setShowModal(true)} className="btn-primary" style={{ padding: '9px 18px', fontSize: 13 }}>
-                + Add New
-              </button>
+              <button onClick={() => setShowModal(true)} className="btn-primary" style={{ padding: '9px 18px', fontSize: 13 }}>+ Add New</button>
             </div>
             <div style={{ background: s.bg2, border: `1px solid ${s.border}`, borderRadius: 14, overflow: 'hidden' }}>
               {subs.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: 'clamp(40px,8vw,64px) 20px', color: s.text2 }}>
-                  No subscriptions yet. Add your first one!
-                </div>
+                <div style={{ textAlign: 'center', padding: 'clamp(40px,8vw,64px) 20px', color: s.text2 }}>No subscriptions yet. Add your first one!</div>
               ) : subs.map((sub: any, i) => (
                 <div key={sub._id} style={{
                   display: 'flex', alignItems: 'center', gap: 14,
@@ -586,32 +506,18 @@ export default function Dashboard() {
                   <SubAvatar name={sub.name} category={sub.category} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontSize: 15, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{sub.name}</div>
-                    <div style={{ fontSize: 12, color: s.text2, marginTop: 2 }}>
-                      {sub.category} · renews {new Date(sub.nextBillingDate).toLocaleDateString()}
-                    </div>
+                    <div style={{ fontSize: 12, color: s.text2, marginTop: 2 }}>{sub.category} · renews {new Date(sub.nextBillingDate).toLocaleDateString()}</div>
                   </div>
                   <div style={{ fontSize: 16, fontWeight: 800, flexShrink: 0 }}>
                     ₹{sub.amount.toLocaleString('en-IN')}
                     <span style={{ fontSize: 11, color: s.text2, fontWeight: 400 }}>/{sub.billingCycle === 'monthly' ? 'mo' : 'yr'}</span>
                   </div>
-                  <span className={`badge ${sub.status === 'active' ? 'badge-active' : 'badge-inactive'}`}>
-                    {sub.status}
-                  </span>
+                  <span className={`badge ${sub.status === 'active' ? 'badge-active' : 'badge-inactive'}`}>{sub.status}</span>
                   <button
                     onClick={() => deleteSub(sub._id)}
-                    style={{
-                      background: 'none', border: 'none', cursor: 'pointer',
-                      color: 'rgba(232,237,245,0.2)', fontSize: 16, padding: '6px',
-                      borderRadius: 6, transition: 'all 0.15s', flexShrink: 0,
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget.style.color = '#f87171');
-                      (e.currentTarget.style.background = 'rgba(239,68,68,0.1)');
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget.style.color = 'rgba(232,237,245,0.2)');
-                      (e.currentTarget.style.background = 'none');
-                    }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(232,237,245,0.2)', fontSize: 16, padding: '6px', borderRadius: 6, transition: 'all 0.15s', flexShrink: 0 }}
+                    onMouseEnter={e => { (e.currentTarget.style.color = '#f87171'); (e.currentTarget.style.background = 'rgba(239,68,68,0.1)'); }}
+                    onMouseLeave={e => { (e.currentTarget.style.color = 'rgba(232,237,245,0.2)'); (e.currentTarget.style.background = 'none'); }}
                   >✕</button>
                 </div>
               ))}
@@ -619,11 +525,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ── ANALYTICS PAGE ─── */}
         {activePage === 'analytics' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, animation: 'fadeIn 0.4s ease' }}>
             <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>Spending Insights</h1>
-
             <div style={{ background: s.bg2, border: `1px solid ${s.border}`, borderRadius: 14, padding: 24 }}>
               <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 20, letterSpacing: '0.04em', color: s.text2 }}>MONTHLY SPENDING TREND</div>
               <ResponsiveContainer width="100%" height={280}>
@@ -637,36 +541,18 @@ export default function Dashboard() {
                   <CartesianGrid strokeDasharray="3 3" stroke="rgba(99,102,241,0.07)" />
                   <XAxis dataKey="month" tick={{ fill: 'rgba(232,237,245,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
                   <YAxis tick={{ fill: 'rgba(232,237,245,0.4)', fontSize: 11 }} axisLine={false} tickLine={false} />
-                  <Tooltip
-                    contentStyle={{ background: 'var(--bg2)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 10, color: 'var(--text)' }}
-                    formatter={(v: any) => [`₹${v}`, 'Spent']}
-                  />
-                  <Area type="monotone" dataKey="amount" stroke="#4f46e5" fill="url(#grad2)" strokeWidth={2.5}
-                    dot={{ fill: '#6366f1', r: 4, strokeWidth: 0 }}
-                    activeDot={{ r: 6, fill: '#818cf8' }}
-                  />
+                  <Tooltip contentStyle={{ background: 'var(--bg2)', border: '1px solid rgba(99,102,241,0.2)', borderRadius: 10, color: 'var(--text)' }} formatter={(v: any) => [`₹${v}`, 'Spent']} />
+                  <Area type="monotone" dataKey="amount" stroke="#4f46e5" fill="url(#grad2)" strokeWidth={2.5} dot={{ fill: '#6366f1', r: 4, strokeWidth: 0 }} activeDot={{ r: 6, fill: '#818cf8' }} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
-
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-              gap: 12,
-            }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
               {['streaming','music','software','gaming','other'].map(cat => {
-                const total = activeSubs
-                  .filter(s => s.category === cat)
-                  .reduce((sum, s) => sum + (s.billingCycle === 'yearly' ? s.amount / 12 : s.amount), 0);
+                const total = activeSubs.filter(s => s.category === cat).reduce((sum, s) => sum + (s.billingCycle === 'yearly' ? s.amount / 12 : s.amount), 0);
                 return (
-                  <div key={cat} style={{
-                    background: s.bg2, border: `1px solid ${s.border}`,
-                    borderRadius: 12, padding: '18px 16px',
-                  }}>
+                  <div key={cat} style={{ background: s.bg2, border: `1px solid ${s.border}`, borderRadius: 12, padding: '18px 16px' }}>
                     <div style={{ fontSize: 11, color: s.text2, textTransform: 'capitalize', marginBottom: 8, fontWeight: 600 }}>{cat}</div>
-                    <div style={{ fontSize: 'clamp(18px,3vw,24px)', fontWeight: 800, color: catColors[cat] }}>
-                      ₹{Math.round(total).toLocaleString('en-IN')}
-                    </div>
+                    <div style={{ fontSize: 'clamp(18px,3vw,24px)', fontWeight: 800, color: catColors[cat] }}>₹{Math.round(total).toLocaleString('en-IN')}</div>
                     <div style={{ fontSize: 11, color: s.text2, marginTop: 4 }}>per month</div>
                   </div>
                 );
@@ -675,15 +561,10 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* ── SETTINGS/INTEGRATIONS PAGE ─── */}
         {activePage === 'settings' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20, animation: 'fadeIn 0.4s ease' }}>
             <h1 style={{ fontSize: 22, fontWeight: 800, letterSpacing: '-0.02em' }}>Integrations & Settings</h1>
-            <div style={{
-              background: s.bg2, border: `1px solid ${s.border}`,
-              borderRadius: 14, padding: 'clamp(20px,4vw,28px)',
-              maxWidth: 520,
-            }}>
+            <div style={{ background: s.bg2, border: `1px solid ${s.border}`, borderRadius: 14, padding: 'clamp(20px,4vw,28px)', maxWidth: 520 }}>
               <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 20 }}>Account Settings</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 <div>
@@ -694,71 +575,35 @@ export default function Dashboard() {
                   <label style={{ fontSize: 13, color: s.text2, marginBottom: 7, display: 'block', fontWeight: 600 }}>Email</label>
                   <input defaultValue={user?.email} />
                 </div>
-                <button className="btn-primary" style={{ width: 'fit-content', padding: '10px 20px', fontSize: 14, marginTop: 4 }}>
-                  Save Changes
-                </button>
+                <button className="btn-primary" style={{ width: 'fit-content', padding: '10px 20px', fontSize: 14, marginTop: 4 }}>Save Changes</button>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* ── ADD SUBSCRIPTION MODAL ──────────────────────────── */}
       {showModal && (
         <div
-          style={{
-            position: 'fixed', inset: 0,
-            background: 'rgba(0,0,0,0.7)',
-            backdropFilter: 'blur(6px)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            zIndex: 200, padding: 16,
-          }}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(6px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 200, padding: 16 }}
           onClick={e => { if (e.target === e.currentTarget) setShowModal(false); }}
         >
-          <div style={{
-            background: 'var(--bg2)',
-            border: '1px solid rgba(99,102,241,0.25)',
-            borderRadius: 20,
-            padding: 'clamp(20px,4vw,28px)',
-            width: '100%', maxWidth: 420,
-            boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
-            animation: 'scaleIn 0.25s ease',
-          }}>
+          <div style={{ background: 'var(--bg2)', border: '1px solid rgba(99,102,241,0.25)', borderRadius: 20, padding: 'clamp(20px,4vw,28px)', width: '100%', maxWidth: 420, boxShadow: '0 24px 80px rgba(0,0,0,0.6)', animation: 'scaleIn 0.25s ease' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 22 }}>
               <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: '-0.01em' }}>Add Subscription</div>
-              <button
-                onClick={() => setShowModal(false)}
-                style={{
-                  background: 'var(--bg3)', border: 'none', cursor: 'pointer',
-                  color: 'var(--text2)', fontSize: 16, borderRadius: 8,
-                  width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  transition: 'all 0.15s',
-                }}
+              <button onClick={() => setShowModal(false)} style={{ background: 'var(--bg3)', border: 'none', cursor: 'pointer', color: 'var(--text2)', fontSize: 16, borderRadius: 8, width: 32, height: 32, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}
                 onMouseEnter={e => { (e.currentTarget.style.background = 'rgba(239,68,68,0.1)'); (e.currentTarget.style.color = '#f87171'); }}
                 onMouseLeave={e => { (e.currentTarget.style.background = 'var(--bg3)'); (e.currentTarget.style.color = 'var(--text2)'); }}
               >✕</button>
             </div>
-
             <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
               <div>
                 <label style={{ fontSize: 12, color: 'var(--text2)', marginBottom: 6, display: 'block', fontWeight: 600 }}>Service Name</label>
-                <input
-                  placeholder="e.g. Netflix"
-                  value={form.name}
-                  onChange={e => setForm({ ...form, name: e.target.value })}
-                  autoFocus
-                />
+                <input placeholder="e.g. Netflix" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} autoFocus />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                 <div>
                   <label style={{ fontSize: 12, color: 'var(--text2)', marginBottom: 6, display: 'block', fontWeight: 600 }}>Amount (₹)</label>
-                  <input
-                    type="number"
-                    placeholder="649"
-                    value={form.amount}
-                    onChange={e => setForm({ ...form, amount: e.target.value })}
-                    min="0"
-                  />
+                  <input type="number" placeholder="649" value={form.amount} onChange={e => setForm({ ...form, amount: e.target.value })} min="0" />
                 </div>
                 <div>
                   <label style={{ fontSize: 12, color: 'var(--text2)', marginBottom: 6, display: 'block', fontWeight: 600 }}>Billing</label>
@@ -781,27 +626,12 @@ export default function Dashboard() {
                 </div>
                 <div>
                   <label style={{ fontSize: 12, color: 'var(--text2)', marginBottom: 6, display: 'block', fontWeight: 600 }}>Next Billing</label>
-                  <input
-                    type="date"
-                    value={form.nextBillingDate}
-                    onChange={e => setForm({ ...form, nextBillingDate: e.target.value })}
-                  />
+                  <input type="date" value={form.nextBillingDate} onChange={e => setForm({ ...form, nextBillingDate: e.target.value })} />
                 </div>
               </div>
               <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="btn-secondary"
-                  style={{ flex: 1, padding: '12px' }}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={addSub}
-                  disabled={addLoading || !form.name || !form.amount || !form.nextBillingDate}
-                  className="btn-primary"
-                  style={{ flex: 1, padding: '12px', opacity: (!form.name || !form.amount || !form.nextBillingDate) ? 0.5 : 1 }}
-                >
+                <button onClick={() => setShowModal(false)} className="btn-secondary" style={{ flex: 1, padding: '12px' }}>Cancel</button>
+                <button onClick={addSub} disabled={addLoading || !form.name || !form.amount || !form.nextBillingDate} className="btn-primary" style={{ flex: 1, padding: '12px', opacity: (!form.name || !form.amount || !form.nextBillingDate) ? 0.5 : 1 }}>
                   {addLoading ? <><span className="spinner" /> Adding…</> : 'Add Subscription'}
                 </button>
               </div>
@@ -810,68 +640,26 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Inline responsive override for dash main grid */}
       <style>{`
-        @media (max-width: 840px) {
-          .dash-main-grid {
-            grid-template-columns: 1fr !important;
-          }
-        }
-        @media (max-width: 768px) {
-          .show-mobile { display: flex !important; }
-        }
+        @media (max-width: 840px) { .dash-main-grid { grid-template-columns: 1fr !important; } }
+        @media (max-width: 768px) { .show-mobile { display: flex !important; } }
       `}</style>
     </div>
   );
 }
 
-/* ─── QuickAdd sub-component ─────────────────────────────── */
-function QuickAdd({
-  services,
-  onPick,
-  bg2, border, text2,
-}: {
-  services: typeof popularServices;
-  onPick: (name: string) => void;
-  bg2: string; border: string; text2: string;
-}) {
+function QuickAdd({ services, onPick, bg2, border, text2 }: { services: typeof popularServices; onPick: (name: string) => void; bg2: string; border: string; text2: string; }) {
   return (
     <div style={{ background: bg2, border: `1px solid ${border}`, borderRadius: 14, padding: 20 }}>
-      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 16, letterSpacing: '0.04em', color: text2 }}>
-        QUICK ADD POPULAR SERVICES
-      </div>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))',
-        gap: 10,
-      }}>
+      <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 16, letterSpacing: '0.04em', color: text2 }}>QUICK ADD POPULAR SERVICES</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: 10 }}>
         {services.map((sv, i) => (
-          <button
-            key={i}
-            onClick={() => onPick(sv.name)}
-            style={{
-              background: sv.bg, border: `1px solid ${border}`,
-              borderRadius: 12, padding: '14px 6px',
-              cursor: 'pointer',
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7,
-              transition: 'all 0.2s ease',
-              fontFamily: 'var(--font-sans)',
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget.style.borderColor = sv.color + '60');
-              (e.currentTarget.style.transform = 'translateY(-2px)');
-              (e.currentTarget.style.boxShadow = `0 6px 20px ${sv.color}20`);
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget.style.borderColor = border);
-              (e.currentTarget.style.transform = '');
-              (e.currentTarget.style.boxShadow = '');
-            }}
+          <button key={i} onClick={() => onPick(sv.name)} style={{ background: sv.bg, border: `1px solid ${border}`, borderRadius: 12, padding: '14px 6px', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, transition: 'all 0.2s ease', fontFamily: 'var(--font-sans)' }}
+            onMouseEnter={e => { (e.currentTarget.style.borderColor = sv.color + '60'); (e.currentTarget.style.transform = 'translateY(-2px)'); (e.currentTarget.style.boxShadow = `0 6px 20px ${sv.color}20`); }}
+            onMouseLeave={e => { (e.currentTarget.style.borderColor = border); (e.currentTarget.style.transform = ''); (e.currentTarget.style.boxShadow = ''); }}
           >
             <span style={{ fontSize: 22, lineHeight: 1 }}>{sv.emoji}</span>
-            <span style={{ fontSize: 10, color: text2, fontWeight: 600, textAlign: 'center', lineHeight: 1.3 }}>
-              {sv.name}
-            </span>
+            <span style={{ fontSize: 10, color: text2, fontWeight: 600, textAlign: 'center', lineHeight: 1.3 }}>{sv.name}</span>
           </button>
         ))}
       </div>

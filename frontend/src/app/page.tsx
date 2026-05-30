@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 /* ─── Hooks ──────────────────────────────────────────────── */
@@ -84,9 +85,16 @@ function AnimatedCounter({
 
 /* ─── Component ──────────────────────────────────────────── */
 export default function Home() {
+  const router = useRouter();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenu, setMobileMenu] = useState(false);
   const [billing, setBilling] = useState<'monthly' | 'annual'>('monthly');
+
+  // Redirect to dashboard if already logged in
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) router.replace('/dashboard');
+  }, []);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 48);
@@ -94,7 +102,6 @@ export default function Home() {
     return () => window.removeEventListener('scroll', fn);
   }, []);
 
-  // Close menu on resize
   useEffect(() => {
     const fn = () => { if (window.innerWidth > 768) setMobileMenu(false); };
     window.addEventListener('resize', fn);
@@ -145,7 +152,6 @@ export default function Home() {
           <span style={{ fontWeight: 800, fontSize: 17, letterSpacing: '-0.02em' }}>SubTracker</span>
         </div>
 
-        {/* Desktop nav */}
         <div className="hide-mobile" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <a href="#features" className="btn-ghost">Features</a>
           <a href="#pricing" className="btn-ghost">Pricing</a>
@@ -156,7 +162,6 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Mobile hamburger */}
         <button
           className="show-mobile"
           onClick={() => setMobileMenu(!mobileMenu)}
@@ -171,7 +176,6 @@ export default function Home() {
         </button>
       </nav>
 
-      {/* Mobile Menu */}
       {mobileMenu && (
         <div className="mobile-menu" style={{ zIndex: 99 }}>
           <a href="#features" onClick={() => setMobileMenu(false)}>Features</a>
@@ -194,7 +198,6 @@ export default function Home() {
         textAlign: 'center',
         position: 'relative', overflow: 'hidden',
       }}>
-        {/* Mesh bg blobs */}
         <div className="mesh-bg" aria-hidden>
           <div className="mesh-blob" style={{ width: 700, height: 700, background: '#4f46e5', top: '-10%', left: '50%', transform: 'translateX(-50%)' }} />
           <div className="mesh-blob" style={{ width: 400, height: 400, background: '#818cf8', top: '40%', left: '10%' }} />
@@ -202,7 +205,6 @@ export default function Home() {
         </div>
 
         <div style={{ position: 'relative', maxWidth: 860, animation: 'fadeUp 0.8s ease forwards' }}>
-          {/* Badge */}
           <div style={{
             display: 'inline-flex', alignItems: 'center', gap: 8,
             background: 'rgba(79,70,229,0.1)',
@@ -250,20 +252,17 @@ export default function Home() {
           </p>
         </div>
 
-        {/* Dashboard Preview Card */}
         <div style={{
           marginTop: 64, width: '100%', maxWidth: 880,
           animation: 'fadeUp 1s ease 0.35s both',
           position: 'relative',
         }}>
-          {/* Glow behind card */}
           <div style={{
             position: 'absolute', inset: -2,
             background: 'linear-gradient(135deg,rgba(79,70,229,0.5),rgba(129,140,248,0.15))',
             borderRadius: 20, filter: 'blur(2px)', opacity: 0.5,
             pointerEvents: 'none',
           }} />
-
           <div style={{
             position: 'relative',
             background: 'var(--bg2)',
@@ -272,7 +271,6 @@ export default function Home() {
             overflow: 'hidden',
             boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
           }}>
-            {/* Title bar */}
             <div style={{
               background: 'var(--bg3)',
               padding: '10px 16px',
@@ -286,7 +284,6 @@ export default function Home() {
                 SubTracker — Dashboard
               </span>
             </div>
-            {/* Dashboard content */}
             <div style={{ padding: 'clamp(14px,3vw,24px)' }}>
               <div style={{
                 display: 'grid',
@@ -462,16 +459,13 @@ export default function Home() {
             <p style={{ color: 'var(--text2)', fontSize: 'clamp(15px,2vw,18px)', marginBottom: 28 }}>
               Track up to 5 subscriptions forever. Go Pro when you outgrow it.
             </p>
-            {/* Billing toggle */}
             <div className="billing-toggle">
               {(['monthly','annual'] as const).map(b => (
                 <button
                   key={b}
                   onClick={() => setBilling(b)}
                   style={{
-                    background: billing === b
-                      ? 'linear-gradient(135deg,#4f46e5,#6366f1)'
-                      : 'transparent',
+                    background: billing === b ? 'linear-gradient(135deg,#4f46e5,#6366f1)' : 'transparent',
                     color: billing === b ? '#fff' : 'var(--text2)',
                     boxShadow: billing === b ? '0 2px 10px rgba(79,70,229,0.4)' : 'none',
                   }}
@@ -514,13 +508,9 @@ export default function Home() {
           ].map((p,i) => (
             <Reveal key={i} delay={i * 100}>
               <div style={{
-                background: p.popular
-                  ? 'linear-gradient(160deg,rgba(79,70,229,0.18),rgba(99,102,241,0.06))'
-                  : 'var(--bg2)',
+                background: p.popular ? 'linear-gradient(160deg,rgba(79,70,229,0.18),rgba(99,102,241,0.06))' : 'var(--bg2)',
                 border: p.popular ? '1px solid rgba(99,102,241,0.4)' : '1px solid var(--border)',
-                borderRadius: 20,
-                padding: 28,
-                position: 'relative',
+                borderRadius: 20, padding: 28, position: 'relative',
                 boxShadow: p.popular ? '0 0 50px rgba(79,70,229,0.18)' : 'none',
                 transition: 'transform 0.3s, box-shadow 0.3s',
               }}
@@ -554,11 +544,8 @@ export default function Home() {
                     {f}
                   </div>
                 ))}
-                <Link
-                  href="/register"
-                  className={p.popular ? 'btn-primary' : 'btn-secondary'}
-                  style={{ marginTop: 20, width: '100%', padding: '13px' }}
-                >
+                <Link href="/register" className={p.popular ? 'btn-primary' : 'btn-secondary'}
+                  style={{ marginTop: 20, width: '100%', padding: '13px' }}>
                   {p.cta}
                 </Link>
               </div>
@@ -571,19 +558,14 @@ export default function Home() {
       <Reveal>
         <section style={{
           padding: 'clamp(64px,8vw,100px) clamp(16px,4vw,60px)',
-          textAlign: 'center',
-          position: 'relative', overflow: 'hidden',
+          textAlign: 'center', position: 'relative', overflow: 'hidden',
         }}>
           <div className="mesh-bg" aria-hidden>
             <div className="mesh-blob" style={{ width: 500, height: 500, background: '#4f46e5', top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }} />
           </div>
           <div style={{ maxWidth: 580, margin: '0 auto', position: 'relative' }}>
             <div className="section-tag" style={{ margin: '0 auto 18px' }}>Start today</div>
-            <h2 style={{
-              fontSize: 'clamp(28px,5vw,54px)',
-              fontWeight: 900, lineHeight: 1.1,
-              marginBottom: 18, letterSpacing: '-0.03em',
-            }}>
+            <h2 style={{ fontSize: 'clamp(28px,5vw,54px)', fontWeight: 900, lineHeight: 1.1, marginBottom: 18, letterSpacing: '-0.03em' }}>
               Your subscriptions aren't<br />going to track themselves
             </h2>
             <p style={{ color: 'var(--text2)', marginBottom: 36, fontSize: 'clamp(14px,2vw,17px)', lineHeight: 1.7 }}>
